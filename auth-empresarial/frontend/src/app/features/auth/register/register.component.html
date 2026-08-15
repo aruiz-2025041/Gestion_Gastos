@@ -1,0 +1,62 @@
+﻿<div class="scene">
+  <div class="grid-layer"></div>
+
+  <img
+    class="watermark"
+    src="assets/branding/logo-mark.png"
+    alt=""
+    aria-hidden="true"
+  />
+
+  <span class="hud-corner tl"></span>
+  <span class="hud-corner tr"></span>
+  <span class="hud-corner bl"></span>
+  <span class="hud-corner br"></span>
+
+  <div class="panel">
+    <span class="panel-corner tl"></span>
+    <span class="panel-corner tr"></span>
+    <span class="panel-corner bl"></span>
+    <span class="panel-corner br"></span>
+
+    <div class="brand">
+      <img src="assets/branding/logo-mark.png" alt="Arc Expense" class="brand-mark" />
+      <p class="eyebrow">Arc Expense</p>
+      <h1>Crear cuenta</h1>
+      <p class="subtitle">Gestion financiera personal</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+      <label for="name">Nombre</label>
+      <input id="name" type="text" formControlName="name" autocomplete="name" />
+      @if (form.controls.name.touched && form.controls.name.invalid) {
+        <small class="error">El nombre debe tener al menos 2 caracteres</small>
+      }
+
+      <label for="email">Correo</label>
+      <input id="email" type="email" formControlName="email" autocomplete="email" />
+      @if (form.controls.email.touched && form.controls.email.invalid) {
+        <small class="error">Ingresa un correo valido</small>
+      }
+
+      <label for="password">Contrasena</label>
+      <input id="password" type="password" formControlName="password" autocomplete="new-password" />
+      @if (form.controls.password.touched && form.controls.password.invalid) {
+        <small class="error">Minimo 8 caracteres</small>
+      }
+
+      @if (errorMessage()) {
+        <p class="error banner">{{ errorMessage() }}</p>
+      }
+      @if (successMessage()) {
+        <p class="success banner">{{ successMessage() }}</p>
+      }
+
+      <button type="submit" [disabled]="isSubmitting()">
+        <span>{{ isSubmitting() ? 'Creando...' : 'Registrarme' }}</span>
+      </button>
+
+      <p class="switch">¿Ya tienes cuenta? <a routerLink="/login">Inicia sesion</a></p>
+    </form>
+  </div>
+</div>
