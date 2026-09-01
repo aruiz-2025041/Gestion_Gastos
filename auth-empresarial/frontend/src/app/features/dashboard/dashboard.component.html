@@ -1,0 +1,145 @@
+<div class="dashboard">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="sueldo-card">
+      <span class="sueldo-label">sueldo fijo</span>
+      <span class="sueldo-valor">{{ formatoQuetzal(sueldoFijo) }}</span>
+    </div>
+
+    <nav class="nav-list">
+      <button class="nav-item">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 19V10M10 19V5M16 19V13M22 19V8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </span>
+        Ingresos
+      </button>
+      <button class="nav-item">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v10M9 9.5c0-1.4 1.3-2.5 3-2.5s3 1.1 3 2.5-1.3 2-3 2.5-3 1.1-3 2.5 1.3 2.5 3 2.5 3-1.1 3-2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </span>
+        Gastos
+      </button>
+      <button class="nav-item">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M7 3h10l1 4H6l1-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 7v13a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7" stroke="currentColor" stroke-width="1.6"/><path d="M9 12h6M9 16h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </span>
+        Impuestos
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="footer-icon" aria-label="Perfil">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M4 20c1.5-4 5-6 8-6s6.5 2 8 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <button class="footer-icon" aria-label="Notificaciones">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6 10a6 6 0 0 1 12 0c0 4 1.5 5.5 1.5 5.5H4.5S6 14 6 10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 18a2 2 0 0 0 4 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <button class="footer-icon" aria-label="Cerrar sesión">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M14 8l4 4-4 4M18 12H9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===== COLUMNA CENTRAL ===== -->
+  <section class="columna-central">
+
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Ingresos de vista</h2>
+        <svg class="panel-icon" viewBox="0 0 24 24" fill="none"><path d="M7 3h10l1 4H6l1-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 7v13a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7" stroke="currentColor" stroke-width="1.6"/></svg>
+      </div>
+      <ul class="lista-items">
+        <li *ngFor="let item of ingresos">
+          <span>{{ item.nombre }}</span>
+          <svg class="check" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="var(--c-teal)"/><path d="M8 12.5l2.5 2.5L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Gastos de vista</h2>
+        <svg class="panel-icon" viewBox="0 0 24 24" fill="none"><path d="M7 3h10l1 4H6l1-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 7v13a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7" stroke="currentColor" stroke-width="1.6"/></svg>
+      </div>
+      <ul class="lista-items">
+        <li *ngFor="let item of gastos">
+          <span>{{ item.nombre }}</span>
+          <svg class="check" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="var(--c-teal)"/><path d="M8 12.5l2.5 2.5L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </li>
+      </ul>
+    </div>
+
+    <div class="fila-inferior">
+      <div class="panel panel-eventos">
+        <h2>Próximos eventos</h2>
+        <div class="evento" *ngFor="let ev of proximosEventos">
+          <span class="evento-fecha">{{ ev.fecha }}</span>
+          <span class="evento-desc">{{ ev.descripcion }}</span>
+        </div>
+      </div>
+
+      <div class="panel panel-calendario">
+        <h2>Calendario</h2>
+        <svg class="calendario-icon" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M3 9h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <rect x="6" y="12" width="3" height="3" fill="var(--c-cyan)"/>
+          <rect x="10.5" y="12" width="3" height="3" fill="var(--c-teal)"/>
+          <rect x="15" y="12" width="3" height="3" fill="var(--c-steel)"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COLUMNA DERECHA ===== -->
+  <section class="columna-derecha">
+    <div class="panel panel-grafica">
+      <h2>Gráfica</h2>
+      <div class="leyenda">
+        <span *ngFor="let serie of seriesGrafica" class="leyenda-item">
+          <i [style.background]="serie.color"></i>{{ serie.nombre }}
+        </span>
+      </div>
+
+      <svg class="chart-svg" viewBox="0 0 320 170" preserveAspectRatio="none">
+        <defs>
+          <linearGradient *ngFor="let s of chartPaths; let i = index" [attr.id]="'grad' + i" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" [attr.stop-color]="s.color" stop-opacity="0.35"></stop>
+            <stop offset="100%" [attr.stop-color]="s.color" stop-opacity="0"></stop>
+          </linearGradient>
+        </defs>
+
+        <g *ngFor="let s of chartPaths; let i = index">
+          <path [attr.d]="s.areaPath" [attr.fill]="'url(#grad' + i + ')'" stroke="none"></path>
+          <path [attr.d]="s.linePath" fill="none" [attr.stroke]="s.color" stroke-width="3" stroke-linecap="round"></path>
+          <circle *ngFor="let p of s.points" [attr.cx]="p.x" [attr.cy]="p.y" r="4" [attr.fill]="s.color" stroke="var(--c-black-blue)" stroke-width="1.5"></circle>
+        </g>
+      </svg>
+
+      <div class="chart-labels">
+        <span *ngFor="let mes of mesesGrafica">{{ mes }}</span>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-label">Total de ahorro</span>
+        <span class="stat-valor">{{ totalAhorro }}</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Fondos de emergencia</span>
+        <span class="stat-valor">{{ fondosEmergencia.toLocaleString('es-GT') }}</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Impuestos a pagar</span>
+        <span class="stat-valor">{{ formatoQuetzal(impuestosPagar) }}</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Total de gastos</span>
+        <span class="stat-valor">{{ totalGastos.toLocaleString('es-GT') }}</span>
+      </div>
+    </div>
+  </section>
+
+</div>
