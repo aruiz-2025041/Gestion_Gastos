@@ -1,125 +1,176 @@
-﻿import { Component } from '@angular/core';
+﻿import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { IngresoModalComponent } from './ingreso-modal.component';
+import { IngresoMenuComponent } from './ingreso-menu/ingreso-menu.component';
+import { IngresoService } from '../../core/services/ingreso.service';
+import { CrearIngresoRequest, SueldoFijoRequest } from '../../core/models/ingreso.model';
 
 interface ListaItem {
   nombre: string;
 }
 
-interface EventoProximo {
-  fecha: string;
-  descripcion: string;
+interface Evento {
+  nombre?: string;
+  descripcion?: string;
+  fecha?: string;
+  monto?: number;
 }
 
 interface SerieGrafica {
   nombre: string;
   color: string;
-  valores: number[];
 }
 
-interface PuntoChart {
+interface Bar {
   x: number;
   y: number;
+  height: number;
+  color: string;
 }
 
-interface SerieChart {
-  color: string;
-  linePath: string;
-  areaPath: string;
-  points: PuntoChart[];
+interface BarGroup {
+  bars: Bar[];
+}
+
+interface GridLine {
+  y: number;
+  label: string;
 }
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IngresoModalComponent, IngresoMenuComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
+  private ingresoService = inject(IngresoService);
+
+  // Estados de modales
+  menuIngresoVisible = false;
+  modalIngresoVisible = false;
+  tipoIngresoSeleccionado: 'fijo' | 'extra' | 'variable' = 'extra';
+
+  // Datos
   sueldoFijo = 0.0;
+  ingresos: ListaItem[] = [];
+  gastos: ListaItem[] = [];
+  proximosEventos: Evento[] = [];
 
-  ingresos: ListaItem[] = [
-    { nombre: 'Servicio de instalación de cable' },
-    { nombre: 'Servicio de página web' }
-  ];
-
-  gastos: ListaItem[] = [
-    { nombre: 'Pago de cable' },
-    { nombre: 'Pago web' }
-  ];
-
-  proximosEventos: EventoProximo[] = [
-    { fecha: '26/8/2026', descripcion: 'Pago de impuesto' }
-  ];
-
-  // --- Datos de la gráfica ---
-  mesesGrafica = ['Ene', 'Feb', 'Mar'];
-
-  seriesGrafica: SerieGrafica[] = [
-    { nombre: 'Computadora', color: 'var(--c-cyan)', valores: [3800, 3200, 3600] },
-    { nombre: 'Dispositivo móvil', color: 'var(--c-steel)', valores: [1800, 2100, 1900] }
-  ];
-
-  get maxValorGrafica(): number {
-    const todos = this.seriesGrafica.flatMap(s => s.valores);
-    return Math.max(...todos);
-  }
-
-  // --- Geometría de la gráfica de línea (SVG) ---
-  private readonly chartWidth = 320;
-  private readonly chartHeight = 170;
-  private readonly paddingX = 24;
-  private readonly paddingTop = 16;
-  private readonly paddingBottom = 16;
-
-  get chartPaths(): SerieChart[] {
-    const n = this.mesesGrafica.length;
-    const step = (this.chartWidth - this.paddingX * 2) / (n - 1);
-    const max = this.maxValorGrafica;
-    const alturaUtil = this.chartHeight - this.paddingTop - this.paddingBottom;
-
-    return this.seriesGrafica.map(serie => {
-      const points: PuntoChart[] = serie.valores.map((valor, i) => ({
-        x: this.paddingX + step * i,
-        y: this.paddingTop + (1 - valor / max) * alturaUtil
-      }));
-
-      const linePath = this.trazarCurvaSuave(points);
-      const base = this.chartHeight - this.paddingBottom;
-      const areaPath = `${linePath} L ${points[points.length - 1].x} ${base} L ${points[0].x} ${base} Z`;
-
-      return { color: serie.color, linePath, areaPath, points };
-    });
-  }
-
-  // Genera una curva suave (Catmull-Rom → Bézier) entre puntos
-  private trazarCurvaSuave(points: PuntoChart[]): string {
-    if (points.length < 2) return '';
-    let d = `M ${points[0].x} ${points[0].y}`;
-
-    for (let i = 0; i < points.length - 1; i++) {
-      const p0 = points[i === 0 ? i : i - 1];
-      const p1 = points[i];
-      const p2 = points[i + 1];
-      const p3 = points[i + 2 < points.length ? i + 2 : i + 1];
-
-      const cp1x = p1.x + (p2.x - p0.x) / 6;
-      const cp1y = p1.y + (p2.y - p0.y) / 6;
-      const cp2x = p2.x - (p3.x - p1.x) / 6;
-      const cp2y = p2.y - (p3.y - p1.y) / 6;
-
-      d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
-    }
-    return d;
-  }
-
-  // --- Tarjetas de resumen ---
+  // Métricas
   totalAhorro = 600;
   fondosEmergencia = 10000;
   impuestosPagar = 45445;
   totalGastos = 10000;
 
+  // Propiedades Gráfica SVG
+  svgWidth = 320;
+  svgHeight = 200;
+  axisX1 = 30;
+  axisX2 = 300;
+  barWidth = 20;
+  yAxisLabelWidth = 30;
+
+  seriesGrafica: SerieGrafica[] = [
+    { nombre: 'Ingresos', color: '#3b82f6' }
+  ];
+
+  mesesGrafica: string[] = ['Ene', 'Feb', 'Mar'];
+
+  yGridLines: GridLine[] = [
+    { y: 20, label: '100' },
+    { y: 60, label: '75' },
+    { y: 100, label: '50' },
+    { y: 140, label: '25' },
+    { y: 180, label: '0' }
+  ];
+
+  barGroups: BarGroup[] = [
+    { bars: [{ x: 50, y: 50, height: 130, color: '#3b82f6' }] },
+    { bars: [{ x: 130, y: 80, height: 100, color: '#3b82f6' }] },
+    { bars: [{ x: 210, y: 110, height: 70, color: '#3b82f6' }] }
+  ];
+
+  ngOnInit() {
+    this.cargarSueldoFijo();
+    this.cargarIngresos();
+  }
+
+  abrirMenuIngreso() {
+    this.menuIngresoVisible = true;
+  }
+
+  cerrarMenuIngreso() {
+    this.menuIngresoVisible = false;
+  }
+
+  onElegirTipoIngreso(tipo: 'fijo' | 'extra' | 'variable') {
+    this.tipoIngresoSeleccionado = tipo;
+    this.menuIngresoVisible = false; // Se oculta el menú previo
+    this.modalIngresoVisible = true;  // Muestra el formulario
+  }
+
+  cerrarModalIngreso() {
+    this.modalIngresoVisible = false;
+  }
+
+  cargarSueldoFijo() {
+    this.ingresoService.obtenerSueldoFijo().subscribe({
+      next: (res) => {
+        if (res && res.monto) {
+          this.sueldoFijo = res.monto;
+        }
+      },
+      error: (err) => console.error('Error al cargar sueldo fijo:', err)
+    });
+  }
+
+  cargarIngresos() {
+    this.ingresoService.listarIngresos().subscribe({
+      next: (res) => {
+        if (res) {
+          this.ingresos = res.map(i => ({
+            nombre: `${i.descripcion || 'Ingreso'} (${i.tipo}) - Q${i.monto}`
+          }));
+        }
+      },
+      error: (err) => console.error('Error al cargar ingresos:', err)
+    });
+  }
+
+  guardarIngreso(datosFormulario: any) {
+    if (this.tipoIngresoSeleccionado === 'fijo') {
+      const payload: SueldoFijoRequest = { monto: datosFormulario.monto };
+      this.ingresoService.guardarSueldoFijo(payload).subscribe({
+        next: () => {
+          this.sueldoFijo = datosFormulario.monto;
+          this.cerrarModalIngreso();
+        },
+        error: (err) => alert('Error al guardar sueldo fijo')
+      });
+    } else {
+      const payload: CrearIngresoRequest = {
+        tipo: this.tipoIngresoSeleccionado,
+        monto: datosFormulario.monto,
+        categoria: datosFormulario.categoria,
+        fechaIngreso: datosFormulario.fecha,
+        metodoPago: datosFormulario.metodoPago,
+        estado: datosFormulario.estado,
+        descripcion: datosFormulario.descripcion
+      };
+
+      this.ingresoService.crearIngreso(payload).subscribe({
+        next: () => {
+          this.cerrarModalIngreso();
+          this.cargarIngresos();
+        },
+        error: (err) => alert('Error al guardar ingreso')
+      });
+    }
+  }
+
   formatoQuetzal(valor: number): string {
-    return 'Q' + valor.toLocaleString('es-GT');
+    return 'Q' + (valor ? valor.toLocaleString('es-GT') : '0');
   }
 }

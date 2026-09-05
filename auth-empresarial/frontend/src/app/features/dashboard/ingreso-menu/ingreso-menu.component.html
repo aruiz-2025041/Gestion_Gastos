@@ -1,0 +1,22 @@
+<div class="modal-overlay" *ngIf="visible">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Ingresos</h3>
+      <button class="btn-close" (click)="onCerrar()">×</button>
+    </div>
+    <div class="options-container">
+      <button class="option-card" (click)="onSeleccionar('fijo')">
+        <span class="option-title">Sueldo Fijo</span>
+        <span class="option-desc">Se actualiza una vez al mes</span>
+      </button>
+      <button class="option-card" (click)="onSeleccionar('extra')">
+        <span class="option-title">Ingreso Extra</span>
+        <span class="option-desc">Pagos únicos, servicios, ventas puntuales</span>
+      </button>
+      <button class="option-card" (click)="onSeleccionar('variable')">
+        <span class="option-title">Ingreso Variable</span>
+        <span class="option-desc">Ingresos que cambian mes a mes</span>
+      </button>
+    </div>
+  </div>
+</div>

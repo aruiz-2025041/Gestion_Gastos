@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
     // Escucha si la redirección fue por vencimiento de sesión por inactividad
     this.route.queryParams.subscribe((params) => {
       if (params['sessionExpired'] === 'inactivity') {
-        this.errorMessage.set('Tu sesión ha expirado por 5 minutos de inactividad.');
+      this.errorMessage.set('Su sesión ha expirado por 2 minutos de inactividad.');
       }
     });
   }

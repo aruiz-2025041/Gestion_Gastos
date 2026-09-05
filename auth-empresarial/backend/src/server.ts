@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 
 import authRoutes from './routes/auth.routes';
+import ingresoRoutes from './routes/ingreso.routes';
 import { errorHandler } from './middlewares/errorHandler';
 
 dotenv.config();
@@ -25,6 +26,7 @@ app.get('/api/health', (_req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/ingresos', ingresoRoutes);
 app.use(errorHandler);
 
 app.listen(PORT, () => {

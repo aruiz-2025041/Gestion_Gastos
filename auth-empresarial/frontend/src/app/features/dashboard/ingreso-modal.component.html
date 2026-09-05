@@ -1,0 +1,79 @@
+<div class="modal-overlay" *ngIf="visible" (click)="onCerrar()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    
+    <!-- Encabezado Dinámico -->
+    <div class="modal-header">
+      <h2 *ngIf="tipo === 'fijo'">Actualizar Sueldo Fijo</h2>
+      <h2 *ngIf="tipo === 'variable'">Ingreso Variable</h2>
+      <h2 *ngIf="tipo !== 'fijo' && tipo !== 'variable'">Ingreso Extra</h2>
+      
+      <button class="modal-close" (click)="onCerrar()">&times;</button>
+    </div>
+
+    <div class="modal-body">
+
+      <!-- OPCIÓN A: FORMULARIO SOLO PARA SUELDO FIJO -->
+      <div *ngIf="tipo === 'fijo'" class="form-group">
+        <label>Monto de Sueldo Mensual (Q)</label>
+        <input type="number" [(ngModel)]="monto" placeholder="Ejemplo: 3500.00" />
+        <small class="help-text">Se actualizará en la tabla <code>ingreso_fijo</code> de PostgreSQL.</small>
+      </div>
+
+      <!-- OPCIÓN B: FORMULARIO COMPLETO PARA EXTRA O VARIABLE -->
+      <ng-container *ngIf="tipo !== 'fijo'">
+        <div class="form-group">
+          <label>Categoría</label>
+          <select [(ngModel)]="categoria">
+            <option value="">Escoje la categoria ingreso</option>
+            <option value="Servicios">Servicios</option>
+            <option value="Ventas">Ventas</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Descripción de ingreso</label>
+          <input type="text" [(ngModel)]="descripcion" placeholder="Ejemplo: Servicio de instalacion de red WiFi" />
+        </div>
+
+        <div class="form-group">
+          <label>Monto (Q)</label>
+          <input type="number" [(ngModel)]="monto" placeholder="Ejemplo: Q00.00" />
+        </div>
+
+        <div class="form-group">
+          <label>Fecha de ingreso</label>
+          <input type="date" [(ngModel)]="fecha" />
+        </div>
+
+        <div class="form-group">
+          <label>Método de pago</label>
+          <select [(ngModel)]="metodoPago">
+            <option value="">Escoje el metodo de pago</option>
+            <option value="Efectivo">Efectivo</option>
+            <option value="Transferencia">Transferencia</option>
+            <option value="Tarjeta">Tarjeta</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Estado</label>
+          <select [(ngModel)]="estado">
+            <option value="Pendiente">Pendiente</option>
+            <option value="Completado">Completado</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Notas</label>
+          <textarea [(ngModel)]="descripcion" placeholder="Ejemplo: pago de servicio de instalacion de..."></textarea>
+        </div>
+      </ng-container>
+
+      <div class="modal-footer">
+        <button class="btn-guardar" (click)="onGuardar()">Guardar</button>
+      </div>
+
+    </div>
+  </div>
+</div>

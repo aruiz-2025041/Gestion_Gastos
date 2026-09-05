@@ -8,20 +8,20 @@
     </div>
 
     <nav class="nav-list">
-      <button class="nav-item">
-        <span class="nav-icon">
+      <button class="nav-item" (click)="abrirMenuIngreso()">
+        <span class="nav-icon nav-icon--ingresos">
           <svg viewBox="0 0 24 24" fill="none"><path d="M4 19V10M10 19V5M16 19V13M22 19V8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         </span>
         Ingresos
       </button>
       <button class="nav-item">
-        <span class="nav-icon">
-          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v10M9 9.5c0-1.4 1.3-2.5 3-2.5s3 1.1 3 2.5-1.3 2-3 2.5-3 1.1-3 2.5 1.3 2.5 3 2.5 3-1.1 3-2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <span class="nav-icon nav-icon--gastos">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v10M9 9.5c0-1.4 1.3-2.5 3-2.5s3 1.1 3 2.5-1.3 2-3 2.5-3 1.1-3 2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
         </span>
         Gastos
       </button>
       <button class="nav-item">
-        <span class="nav-icon">
+        <span class="nav-icon nav-icon--impuestos">
           <svg viewBox="0 0 24 24" fill="none"><path d="M7 3h10l1 4H6l1-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 7v13a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7" stroke="currentColor" stroke-width="1.6"/><path d="M9 12h6M9 16h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
         </span>
         Impuestos
@@ -29,13 +29,13 @@
     </nav>
 
     <div class="sidebar-footer">
-      <button class="footer-icon" aria-label="Perfil">
+      <button class="footer-icon footer-icon--perfil" aria-label="Perfil">
         <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M4 20c1.5-4 5-6 8-6s6.5 2 8 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       </button>
-      <button class="footer-icon" aria-label="Notificaciones">
+      <button class="footer-icon footer-icon--notif" aria-label="Notificaciones">
         <svg viewBox="0 0 24 24" fill="none"><path d="M6 10a6 6 0 0 1 12 0c0 4 1.5 5.5 1.5 5.5H4.5S6 14 6 10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 18a2 2 0 0 0 4 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       </button>
-      <button class="footer-icon" aria-label="Cerrar sesión">
+      <button class="footer-icon footer-icon--salir" aria-label="Cerrar sesión">
         <svg viewBox="0 0 24 24" fill="none"><path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M14 8l4 4-4 4M18 12H9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
     </div>
@@ -44,7 +44,7 @@
   <!-- ===== COLUMNA CENTRAL ===== -->
   <section class="columna-central">
 
-    <div class="panel">
+    <div class="panel panel--tinted">
       <div class="panel-header">
         <h2>Ingresos de vista</h2>
         <svg class="panel-icon" viewBox="0 0 24 24" fill="none"><path d="M7 3h10l1 4H6l1-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 7v13a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7" stroke="currentColor" stroke-width="1.6"/></svg>
@@ -57,7 +57,7 @@
       </ul>
     </div>
 
-    <div class="panel">
+    <div class="panel panel--tinted">
       <div class="panel-header">
         <h2>Gastos de vista</h2>
         <svg class="panel-icon" viewBox="0 0 24 24" fill="none"><path d="M7 3h10l1 4H6l1-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 7v13a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7" stroke="currentColor" stroke-width="1.6"/></svg>
@@ -94,7 +94,7 @@
 
   <!-- ===== COLUMNA DERECHA ===== -->
   <section class="columna-derecha">
-    <div class="panel panel-grafica">
+    <div class="panel panel--tinted panel-grafica">
       <h2>Gráfica</h2>
       <div class="leyenda">
         <span *ngFor="let serie of seriesGrafica" class="leyenda-item">
@@ -102,22 +102,18 @@
         </span>
       </div>
 
-      <svg class="chart-svg" viewBox="0 0 320 170" preserveAspectRatio="none">
-        <defs>
-          <linearGradient *ngFor="let s of chartPaths; let i = index" [attr.id]="'grad' + i" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" [attr.stop-color]="s.color" stop-opacity="0.35"></stop>
-            <stop offset="100%" [attr.stop-color]="s.color" stop-opacity="0"></stop>
-          </linearGradient>
-        </defs>
+      <svg class="chart-svg" [attr.viewBox]="'0 0 ' + svgWidth + ' ' + svgHeight" preserveAspectRatio="xMidYMid meet">
+        <g *ngFor="let g of yGridLines">
+          <line [attr.x1]="axisX1" [attr.x2]="axisX2" [attr.y1]="g.y" [attr.y2]="g.y" class="grid-line"/>
+          <text [attr.x]="axisX1 - 6" [attr.y]="g.y + 4" class="axis-label" text-anchor="end">{{ g.label | number }}</text>
+        </g>
 
-        <g *ngFor="let s of chartPaths; let i = index">
-          <path [attr.d]="s.areaPath" [attr.fill]="'url(#grad' + i + ')'" stroke="none"></path>
-          <path [attr.d]="s.linePath" fill="none" [attr.stroke]="s.color" stroke-width="3" stroke-linecap="round"></path>
-          <circle *ngFor="let p of s.points" [attr.cx]="p.x" [attr.cy]="p.y" r="4" [attr.fill]="s.color" stroke="var(--c-black-blue)" stroke-width="1.5"></circle>
+        <g *ngFor="let grupo of barGroups">
+          <rect *ngFor="let b of grupo.bars" [attr.x]="b.x" [attr.y]="b.y" [attr.width]="barWidth" [attr.height]="b.height" [attr.fill]="b.color" rx="3"></rect>
         </g>
       </svg>
 
-      <div class="chart-labels">
+      <div class="chart-labels" [style.padding-left.px]="yAxisLabelWidth">
         <span *ngFor="let mes of mesesGrafica">{{ mes }}</span>
       </div>
     </div>
@@ -127,7 +123,7 @@
         <span class="stat-label">Total de ahorro</span>
         <span class="stat-valor">{{ totalAhorro }}</span>
       </div>
-      <div class="stat-card">
+      <div class="stat-card stat-card--tint">
         <span class="stat-label">Fondos de emergencia</span>
         <span class="stat-valor">{{ fondosEmergencia.toLocaleString('es-GT') }}</span>
       </div>
@@ -135,7 +131,7 @@
         <span class="stat-label">Impuestos a pagar</span>
         <span class="stat-valor">{{ formatoQuetzal(impuestosPagar) }}</span>
       </div>
-      <div class="stat-card">
+      <div class="stat-card stat-card--tint">
         <span class="stat-label">Total de gastos</span>
         <span class="stat-valor">{{ totalGastos.toLocaleString('es-GT') }}</span>
       </div>
@@ -143,3 +139,20 @@
   </section>
 
 </div>
+
+<!-- Menú de Selección de Tipo de Ingreso -->
+<app-ingreso-menu
+  *ngIf="menuIngresoVisible"
+  [visible]="menuIngresoVisible"
+  (cerrar)="cerrarMenuIngreso()"
+  (seleccionar)="onElegirTipoIngreso($event)"
+  (elegirTipo)="onElegirTipoIngreso($event)">
+</app-ingreso-menu>
+
+<!-- Modal Formulario de Ingreso -->
+<app-ingreso-modal
+  *ngIf="modalIngresoVisible"
+  [tipo]="tipoIngresoSeleccionado"
+  (cerrar)="cerrarModalIngreso()"
+  (guardar)="guardarIngreso($event)">
+</app-ingreso-modal>
